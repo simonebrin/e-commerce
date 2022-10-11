@@ -6,6 +6,19 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', (req, res) => {
   // find all tags
   // be sure to include its associated Product data
+  Tag.findAll({
+    include:[{
+      model: Product,
+      through: ProductTag
+    }]
+  })
+    .then(function (tags) {
+      res.json(tags);
+    })
+    .catch(function (error) {
+      console.error(error);
+      res.status(500).json(error);
+    });
 });
 
 router.get('/:id', (req, res) => {
@@ -15,6 +28,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new tag
+  Tag.create({tag_name: req.body.tag_name})
+  Tag.create(req.body);
 });
 
 router.put('/:id', (req, res) => {
